@@ -1,4 +1,5 @@
 const Productos = require('../api/productos')
+const fs = require('fs/promises')
 
 class Archivo {
 
@@ -32,13 +33,23 @@ class Archivo {
 
     }
 
-    async actualizar() {
-
+    async actualizar(idProducto, nuevoProducto) {
+        try {
+            let archivoLeido = await fs.promises.readFile(this.pathArchivo, 'utf-8');
+            let archivoActualizado = JSON.parse(archivoLeido);
+            archivoActualizado[idProducto] = nuevoProducto
+            await fs.promises.writeFile(this.pathArchivo, JSON.stringify(archivoActualizado, null, '\t'));
+        } catch {
+            throw new Error('No se pudo actualizar el archivo')
+        }
     }
 
-    async borrar() {
+    async borrar(idProducto) {
         try {
-            await fs.promises.unlink(this.pathArchivo);
+            let archivoLeido = await fs.promises.readFile(this.pathArchivo, 'utf-8');
+            let archivoActualizado = archivoLeido.splice(idProducto, 1)
+            await fs.promises.writeFile(this.pathArchivo, JSON.stringify(archivoActualizado, null, '\t'));
+            // await fs.promises.unlink(this.pathArchivo);
         } catch {
             throw new Error('No se pudo eliminar el archivo')
         }

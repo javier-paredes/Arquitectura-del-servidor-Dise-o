@@ -5,14 +5,14 @@ class MySql {
 
     constructor() {
         this.producto,
-        this.crearTabla()
+            this.crearTabla()
     }
-    
+
     async crearTabla() {
         try {
             console.log('Borrando tabla existente...');
             await knex.schema.dropTable('productos')
-            
+
             await knex.schema.createTable('productos', table => {
                 table.string('title');
                 table.integer('price');
@@ -25,8 +25,8 @@ class MySql {
         }
     }
 
-    listar() {
-        knex.from('productos').select('*')
+    async listar() {
+        await knex.from('productos').select('*')
             .then(rows => {
                 // for (row of rows) {
                 //     console.log(`${row['title']} ${row['price']} ${row['thumbnail']} ${row['id']}`);
@@ -49,9 +49,9 @@ class MySql {
         this.producto.push(productos);
     }
 
-    actualizar(idProducto, nuevoProducto) {
+    async actualizar(idProducto, nuevoProducto) {
         this.producto[idProducto] = nuevoProducto;
-        knex.from('productos').where('id', `${idProducto}`).update(nuevoProducto)
+        await knex.from('productos').where('id', `${idProducto}`).update(nuevoProducto)
             .then(() => {
                 console.log('Producto actualizado')
             }).catch(error => {
@@ -59,9 +59,9 @@ class MySql {
             })
     }
 
-    borrar(idProducto) {
+    async borrar(idProducto) {
         console.log(idProducto)
-        knex.from('productos').where('id', '=', `${idProducto}`).del()
+        await knex.from('productos').where('id', '=', `${idProducto}`).del()
             .then(() => {
                 console.log('Producto eliminado')
             }).catch(error => {

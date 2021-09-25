@@ -5,6 +5,9 @@ const Faker = require('../models/faker');
 const log4js = require("log4js");
 var { graphqlHTTP } = require('express-graphql');
 const schema = require('../models/productosGraphQL').schema
+const SingletonFactory = require('../factory');
+let singletonFactory = SingletonFactory.getInstancia();
+let instanciaFactory = singletonFactory.getPersistencia('mysql')
 
 // const loggerConsola = log4js.getLogger('consola');
 // const loggerWarn = log4js.getLogger('warn');
@@ -25,7 +28,9 @@ routerProductos.get('/vista-test/:cant', (req, res) => {
 // LISTAR PRODUCTOS
 routerProductos.get('/listar', async (req, res) => {
     try {
-        let result = await productos.listar();
+
+        let result = await instanciaFactory.listar()
+        // let result = await productos.listar();
         return res.json(result);
     } catch (error) {
         loggerError.error(error)
@@ -37,7 +42,8 @@ routerProductos.get('/listar', async (req, res) => {
 routerProductos.get('/listar/:id', async (req, res) => {
 
     try {
-        let mensajeLista = await productos.listarPorId(req.params.id);
+        let mensajeLista = instanciaFactory.listarPorId(req.params.id)
+        // let mensajeLista = await productos.listarPorId(req.params.id);
         res.json(mensajeLista)
     } catch (error) {
         loggerError.error(error)
@@ -52,7 +58,8 @@ routerProductos.post('/guardar', async (req, res) => {
         nuevoProducto.title = req.body.title;
         nuevoProducto.price = req.body.price;
         nuevoProducto.thumbnail = req.body.thumbnail;
-        await productos.guardar(nuevoProducto)
+        await instanciaFactory.guardar(nuevoProducto)
+        // await productos.guardar(nuevoProducto)
         res.json(nuevoProducto)
     } catch (error) {
         loggerError.error(error)
@@ -63,7 +70,8 @@ routerProductos.post('/guardar', async (req, res) => {
 //ACTUALIZAR PRODUCTO POR ID
 routerProductos.put('/actualizar/:id', async (req, res) => {
     try {
-        let nuevoProducto = await productos.actualizar(req.params.id, req.body);
+        let nuevoProducto = await instanciaFactory.actualizar(req.params.id, req.body);
+        // let nuevoProducto = await productos.actualizar(req.params.id, req.body);
         res.json(nuevoProducto);
     } catch (error) {
         loggerError.error(error)
@@ -73,7 +81,8 @@ routerProductos.put('/actualizar/:id', async (req, res) => {
 
 routerProductos.put('/actualizar', async (req, res) => {
     try {
-        let productoActualizado = await productos.actualizarPorNombre(req.body.title, req.body.nuevoProducto);
+        let productoActualizado = await instanciaFactory.actualizarPorNombre(req.body.title, req.body.nuevoProducto);
+        // let productoActualizado = await productos.actualizarPorNombre(req.body.title, req.body.nuevoProducto);
         res.json(productoActualizado);
     } catch (error) {
         loggerError.error(error)
@@ -84,7 +93,8 @@ routerProductos.put('/actualizar', async (req, res) => {
 // BORRAR PRODUCTO POR ID
 routerProductos.delete('/borrar/:id', async (req, res) => {
     try {
-        let productoBorrado = await productos.borrar(req.params.id);
+        let productoBorrado = await instanciaFactory.borrar(req.params.id);
+        // let productoBorrado = await productos.borrar(req.params.id);
         res.json(productoBorrado);
     } catch (error) {
         loggerError.error(error)
@@ -94,7 +104,8 @@ routerProductos.delete('/borrar/:id', async (req, res) => {
 
 routerProductos.delete('/borrar', async (req, res) => {
     try {
-        let productoBorrado = await productos.borrarPorNombre(req.body.title);
+        let productoBorrado = await instanciaFactory.borrarPorNombre(req.body.title);
+        // let productoBorrado = await productos.borrarPorNombre(req.body.title);
         res.json(productoBorrado);
     } catch (error) {
         loggerError.error(error)
@@ -105,11 +116,13 @@ routerProductos.delete('/borrar', async (req, res) => {
 
 // FUNCIONES GRAPHQL
 const buscar = async function () {
-    return await productos.listar();
+    return await instanciaFactory.listar();
+    // return await productos.listar();
 }
 const actualizar = async function (nuevoProducto) {
     console.log(JSON.stringify(nuevoProducto));
-    return await productos.actualizar(nuevoProducto._id, nuevoProducto);
+    return await instanciaFactory.actualizar(nuevoProducto._id, nuevoProducto);
+    // return await productos.actualizar(nuevoProducto._id, nuevoProducto);
 }
 var root = {
     buscar: buscar,
