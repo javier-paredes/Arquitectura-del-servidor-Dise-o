@@ -12,4 +12,4 @@ En la misma clase se encuentra el patron de diseño de Singleton en donde se cre
 
 4. En el archivo de routes, por ejemplo de productos, se crea una llamada al creador de instancias y luego <strong>se le aplica getPersistencia() a la instancia creada</strong>.
 
-5. Cada solicitud tiene reemplazazada la funcion que antes llamaba directamente a la api de productos por la funcion del factory que llamara a los metodos de listar, guardar, borrar y actualizar.
+5. Cada solicitud tiene reemplazazada la funcion que antes llamaba directamente a la api de productos por la funcion del factory que llamara a los metodos de <b>listar, guardar, borrar y actualizar</b>.
