@@ -1,4 +1,4 @@
-# Arquitectura-del-servidor-Dise-o
+# Arquitectura-del-servidor-Diseño
 Entrega del desafio para la clase 40 de Arquitectura del servidor: Diseño
 
 <h2>Instrucciones para la corrección:</h2>
